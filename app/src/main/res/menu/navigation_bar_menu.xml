@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_flight"
+        android:icon="@drawable/selector_nav_flight"
+        android:title="@string/nav_flight_title"
+        android:tint="@android:color/transparent"
+        android:textColor="@android:color/transparent"
+        android:iconTint="@android:color/transparent"/>
+    <item
+        android:id="@+id/nav_rate"
+        android:icon="@drawable/selector_nav_rate"
+        android:title="@string/nav_rate_title"
+        />
+</menu>

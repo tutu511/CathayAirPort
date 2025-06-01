@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">AirPort</string>
+
+    <string name="nav_flight_title">航班</string>
+    <string name="nav_rate_title">匯率</string>
+
+    <string name="tab_flight_departure">起飛班機</string>
+    <string name="tab_flight_arrival">抵達班機</string>
+
+    <string name="edit_flight_hint">請輸入航空公司IATA國際代碼</string>
+    <string name="tv_flight_hint">請在上方輸入航班資訊\n默認預先加載 TPE\n【航空公司IATA國際代碼】</string>
+
+    <string name="tv_rate_base">主幣別:</string>
+    <string name="tv_rate_base_dialog_title">選擇主幣別</string>
+    <string name="tv_rate_base_btn_finish">完成</string>
+    <string name="tv_rate_other">請選擇需要顯示的幣別</string>
+    <string name="tv_rate_other_dialog_title">選擇幣別（最多6個）</string>
+    <string name="tv_rate_tip_title">溫馨提醒</string>
+    <string name="tv_rate_tip_content">●&#160;&#160;&#160;預設主幣別為美金（USD），金額為 1.0\n●&#160;&#160;&#160;點擊「主幣別」可切換基準貨幣\n●&#160;&#160;&#160;點擊「請選擇需要顯示的幣別」可多選幣別\n●&#160;&#160;&#160;匯率將依據主幣別即時換算</string>
+
+</resources>

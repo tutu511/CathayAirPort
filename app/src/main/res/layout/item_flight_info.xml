@@ -1,0 +1,151 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="flightInfo"
+            type="com.example.airport.data.FlightInfo" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_rc_fff5d5_corner10"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
+        android:layout_margin="8dp">
+
+        <TextView
+            android:id="@+id/tv_remark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rc_adc5d8_corner10_bottom"
+            android:paddingLeft="6dp"
+            android:paddingTop="3dp"
+            android:paddingRight="6dp"
+            android:paddingBottom="3dp"
+            android:text="@{flightInfo.remark}"
+            android:textColor="@color/item_flight_info_remark_text"
+            android:textSize="12sp" />
+
+        <RelativeLayout
+            android:id="@+id/layout_middle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_remark"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/tv_departure_airport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/layout_time"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text='@{flightInfo.departureAirportID + " \n " + flightInfo.departureAirport}'
+                android:textColor="@color/icon_mode_opposite_color"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/layout_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_estimated_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text='@{"預估時間:  " + flightInfo.estimatedTime}'
+                    android:textColor="@color/nav_bar_text_normal_color"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/edit_flight_stroke"/>
+
+                <TextView
+                    android:id="@+id/tv_actual_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text='@{"實際時間:  " + flightInfo.actualTime}'
+                    android:padding="5dp"
+                    android:textColor="@color/nav_bar_text_normal_color"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_arrival_airport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/layout_time"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text='@{flightInfo.arrivalAirportID + " \n " + flightInfo.arrivalAirport}'
+                android:textColor="@color/icon_mode_opposite_color"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_flight_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_middle"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:text='@{"航機班號:  " + flightInfo.flightNumber}'
+            android:textColor="@color/icon_mode_opposite_color"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_terminal_gate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_flight_number"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="5dp"
+            android:text='@{"航廈/登機門:  " + flightInfo.terminal + "/" + flightInfo.gate}'
+            android:textColor="@color/icon_mode_opposite_color"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_airline_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_middle"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:text="航空公司名稱/IATA"
+            android:textColor="@color/icon_mode_opposite_color"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_airline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_airline_title"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:text='@{flightInfo.airline + "/" + flightInfo.airlineID}'
+            android:textColor="@color/icon_mode_opposite_color"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+</layout>

@@ -1,0 +1,111 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+// 獲取 local.properties 裡的 API_KEY
+def apiKey = project.hasProperty("API_KEY") ? project.property("API_KEY") : ""
+
+android {
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.example.airport"
+        minSdk 28
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // 引用 apiKey 並產生 BuildConfig 字段
+        buildConfigField "String", "API_KEY", "\"${apiKey}\""
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    viewBinding {
+        enabled = true
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        // Jetpack Compose 與 Kotlin 的版本對應表：https://developer.android.com/jetpack/androidx/releases/compose-kotlin?hl=zh-cn#kts
+        kotlinCompilerExtensionVersion '1.4.3'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10"
+
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // 提供 LiveData 和 ViewModel 支持
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+    implementation "androidx.compose.runtime:runtime-livedata:1.4.3"
+
+    // 數據綁定
+    implementation 'androidx.databinding:databinding-runtime:7.1.0'
+
+    // fragment
+    implementation "androidx.navigation:navigation-fragment-ktx:2.7.7"
+    implementation "androidx.navigation:navigation-ui-ktx:2.7.7"
+    implementation 'androidx.navigation:navigation-fragment:2.7.7'
+
+    // viewpager 視圖滑動切換工具
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    // recyclerView 多类型的适配器
+    implementation 'com.drakeet.multitype:multitype:4.3.0'
+
+    // 下拉刷新
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    // 网络请求：RxJava2 + Retrofit2 + OkHttp3
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation "com.squareup.retrofit2:retrofit:2.6.4"
+    implementation "com.squareup.retrofit2:converter-gson:2.6.4"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.4"
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
+
+    // Compose 基礎組件
+    implementation 'androidx.activity:activity-compose:1.7.2'
+    implementation 'androidx.compose.ui:ui:1.4.3'
+    implementation 'androidx.compose.material3:material3:1.1.0-alpha06'
+    implementation 'androidx.compose.ui:ui-tooling-preview:1.4.3'
+
+    // ViewModel + Compose 整合
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.6.2'
+    
+}

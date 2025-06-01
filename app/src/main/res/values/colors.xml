@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary">#FF9800</color>
+    <color name="color_secondary">#F0BA6E</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <color name="icon_fill_color">#FFC824</color>
+    <color name="icon_stroke_color">#6B400D</color>
+    <color name="icon_mode_color">#FFFFFF</color>
+    <color name="icon_mode_opposite_color">#000000</color>
+
+    <color name="icon_fill_search_color">#2D2924</color>
+    <color name="icon_stroke_search_color">#F9F0D4</color>
+    <color name="icon_inside_search_color">#F5AC3A</color>
+
+    <color name="nav_bar_text_normal_color">#8a8a8a</color>
+    <color name="nav_bar_text_select_color">#6B400D</color>
+
+    <color name="edit_flight_stroke">#FFC824</color>
+
+    <color name="tab_text_normal_color">#656363</color>
+    <color name="tab_text_select_color">#000000</color>
+    <color name="tab_indicator_color">#FFC107</color>
+
+    <color name="item_flight_info_remark_bg">#D7E7F3</color>
+    <color name="item_flight_info_remark_text">#06508A</color>
+    <color name="item_flight_info_bg">#FFF5D5</color>
+
+    <color name="tv_rate_bg">#FFF6D8</color>
+
+    <color name="ripple_click_color">#1E000000</color>
+
+    <color name="checkbox_status_checked">#FF9800</color>
+    <color name="checkbox_status_unchecked">#FF9800</color>
+    <color name="checkbox_status_checkmark">#FFFFFF</color>
+
+    <color name="bottom_navigation_bg">#FFFFFF</color>
+    <color name="bottom_navigation_stroke_color">#05000000</color>
+
+</resources>
