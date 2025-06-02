@@ -1,7 +1,6 @@
 package com.example.airport.ui.theme.day
 
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.ui.graphics.Color
 
 val LightThemeColors = lightColorScheme(
 
@@ -10,5 +9,7 @@ val LightThemeColors = lightColorScheme(
     background = Background,
     onBackground = OnBackground,
     surface = Surface,
-    onSurface = Color.Black,
+    onSurface = OnSurface,
+    error = Error,
+    onError = OnError
 )

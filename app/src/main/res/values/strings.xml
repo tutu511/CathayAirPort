@@ -17,5 +17,7 @@
     <string name="tv_rate_other_dialog_title">選擇幣別（最多6個）</string>
     <string name="tv_rate_tip_title">溫馨提醒</string>
     <string name="tv_rate_tip_content">●&#160;&#160;&#160;預設主幣別為美金（USD），金額為 1.0\n●&#160;&#160;&#160;點擊「主幣別」可切換基準貨幣\n●&#160;&#160;&#160;點擊「請選擇需要顯示的幣別」可多選幣別\n●&#160;&#160;&#160;匯率將依據主幣別即時換算</string>
+    <string name="tv_rate_default_error_msg">匯率獲取失敗，請檢查網路或稍後再試 ！</string>
+    <string name="tv_rate_empty_error_msg">匯率獲取失敗，返回數據為空，請稍後再試 ！</string>
 
 </resources>

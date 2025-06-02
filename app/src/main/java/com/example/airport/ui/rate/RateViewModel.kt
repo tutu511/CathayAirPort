@@ -6,6 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.airport.BuildConfig
+import com.example.airport.R
+import com.example.airport.data.LoadMore
 import com.example.airport.request.Repository
 import com.google.gson.Gson
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -33,6 +35,12 @@ class RateViewModel(application: Application) : AndroidViewModel(application) {
     val selectedCurrencies: LiveData<List<String>> = _selectedCurrencies
 
     private val compositeDisposable = CompositeDisposable()
+    private val context = getApplication<Application>()
+
+    // 錯誤頁重新獲取匯率數據是
+    private val _loadMoreState = MutableLiveData(LoadMore())
+    val loadMoreState: LiveData<LoadMore> = _loadMoreState
+
 
     // 設定輸入金額
     fun setBaseAmount(amount: Double) {
@@ -55,11 +63,15 @@ class RateViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun fetchAllRates() {
+        // 顯示加載中
+        _loadMoreState.value = LoadMore(isLoading = true, message = null)
+
         val disposable = Repository
             .getAllExchangeRates(
                 apiKey = BuildConfig.API_KEY,
                 baseCurrency = baseCurrency.value,
                 currencies = allCurrencies)
+            .timeout(10, java.util.concurrent.TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ response ->
@@ -68,12 +80,17 @@ class RateViewModel(application: Application) : AndroidViewModel(application) {
                         updateRates(it)
                     }
                     Log.d("RateViewModel", "RateViewModel response: ${Gson().toJson(response.getData())}")
+                    _loadMoreState.value = LoadMore(isLoading = false, message = null)
                 } else {
                     Log.d("RateViewModel", "RateViewModel response data is empty")
+                    val errorMsg = context.getString(R.string.tv_rate_empty_error_msg)
+                    _loadMoreState.value = LoadMore(isLoading = false, message = errorMsg)
                 }
             }, { error ->
                 // 顯示錯誤訊息
                 Log.d("RateViewModel", "RateViewModel response : error = " + error.message)
+                val errorMsg = context.getString(R.string.tv_rate_default_error_msg)
+                _loadMoreState.value = LoadMore(isLoading = false, message = errorMsg)
             })
         compositeDisposable.add(disposable)
     }

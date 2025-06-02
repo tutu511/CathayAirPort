@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -50,6 +52,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.airport.R
+import com.example.airport.data.LoadMore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +68,7 @@ fun ExchangeRateScreen(viewModel: RateViewModel) {
     // 當 API 資料成功載入並更新 rateList 時，UI 會自動更新顯示新的匯率清單
     val rateMap by viewModel.rateList.observeAsState(emptyMap())
     // 主幣別
-    val baseCurrency by viewModel.baseCurrency.observeAsState("USB")
+    val baseCurrency by viewModel.baseCurrency.observeAsState("USD")
     var showBaseCurrDialog by remember { mutableStateOf(false) }
     var selectedBaseCurrency by remember { mutableStateOf(baseCurrency) }
     // 其他幣別
@@ -87,6 +90,8 @@ fun ExchangeRateScreen(viewModel: RateViewModel) {
     val focusManager = LocalFocusManager.current
     // 滑動：用來記錄和控制捲動狀態
     val scrollState = rememberScrollState()
+    // 加載狀態
+    val loadMoreState by viewModel.loadMoreState.observeAsState(LoadMore())
 
     Column(
         modifier = Modifier
@@ -125,7 +130,7 @@ fun ExchangeRateScreen(viewModel: RateViewModel) {
                         painter = painterResource(id = R.drawable.ic_rate_change),
                         contentDescription = "幣別選擇",
                         modifier = Modifier
-                            .size(24.dp)
+                            .size(26.dp)
                             .padding(end = 8.dp)
                     )
                     Text(
@@ -140,6 +145,13 @@ fun ExchangeRateScreen(viewModel: RateViewModel) {
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.primary
                     )
+                    // 為了提示用戶這個可以有更多選項
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_rate_more),
+                        contentDescription = "幣別選擇",
+                        modifier = Modifier
+                            .size(20.dp)
+                    )
 
                     // 點擊了會有彈窗：選擇主幣別
                     if (showBaseCurrDialog) {
@@ -147,7 +159,7 @@ fun ExchangeRateScreen(viewModel: RateViewModel) {
                             onDismissRequest = { showBaseCurrDialog = false },
                             modifier = Modifier
                                 .fillMaxWidth(0.98f)
-                                .padding(vertical = 50.dp),
+                                .fillMaxHeight(0.90f),
                             containerColor = MaterialTheme.colorScheme.background,
                             // tonalElevation 用來控制表面的色調提升的參數，會影響背景顏色
                             tonalElevation = 0.dp,
@@ -280,7 +292,7 @@ fun ExchangeRateScreen(viewModel: RateViewModel) {
                     onDismissRequest = { showOtherCurrDialog = false },
                     modifier = Modifier
                         .fillMaxWidth(0.98f)
-                        .padding(vertical = 30.dp),
+                        .fillMaxHeight(0.91f),
                     containerColor = MaterialTheme.colorScheme.background,
                     // tonalElevation 用來控制表面的色調提升的參數，會影響背景顏色
                     tonalElevation = 0.dp,
@@ -366,24 +378,61 @@ fun ExchangeRateScreen(viewModel: RateViewModel) {
             }
         }
 
-        if (rateMap.isEmpty()) {
-            // 顯示 Loading 動畫
+        if (loadMoreState.isLoading) {
+            // 加載中：https://developer.android.com/develop/ui/compose/components/progress?hl=zh-tw
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .height(300.dp),
                 contentAlignment = Alignment.Center
             ) {
-                // https://developer.android.com/develop/ui/compose/components/progress?hl=zh-tw
                 CircularProgressIndicator(
                     modifier = Modifier.size(48.dp),
                     color = MaterialTheme.colorScheme.primary,
                     strokeWidth = 4.dp
                 )
             }
+        } else if (!loadMoreState.message.isNullOrBlank()) {
+            // 錯誤信息
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .height(300.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            viewModel.fetchAllRates()
+                        },
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_rate_error),
+                        contentDescription = "無數據",
+                        modifier = Modifier
+                            .size(150.dp)
+                            .padding(end = 8.dp)
+                    )
+                    Text(
+                        text = loadMoreState.message!!,
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+            }
         } else {
             // 顯示六個幣別匯率換算結果
             ExchangeRateList(baseAmount = baseAmount, rates = rateMap, selectedCurrencies = selectedCurrencies)
         }
 
+        // 溫馨提醒
         ExchangeRateTip()
     }
 }
