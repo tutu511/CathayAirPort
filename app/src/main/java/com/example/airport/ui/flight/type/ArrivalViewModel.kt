@@ -32,14 +32,17 @@ class ArrivalViewModel(application: Application) : BaseViewModel(application) {
     // 每次加载的条数
     private val limit = 10
 
-    fun loadFlightInfo(flyType: String, airPortID: String) {
-        val disposable = Repository.getFlightInfo(flyType, airPortID)
+    // airPortID 過濾數據，airPortID 代表想查詢的機場
+    fun loadFlightInfo(airPortID: String, airFlyLine: Int, airFlyIO: Int) {
+        val disposable = Repository.getFlightInfo(airFlyLine, airFlyIO)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { response ->
                     _isSearching.value = true
-                    response?.let { appendData(it) }
+                    response?.let {
+                        appendData(it)
+                    }
                     _isLoading.value = false
                 },
                 { error ->

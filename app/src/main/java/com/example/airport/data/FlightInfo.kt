@@ -1,68 +1,58 @@
 package com.example.airport.data
 
-import android.provider.ContactsContract
 import com.google.gson.annotations.SerializedName
-import java.sql.Date
 
 data class FlightInfo(
-    // FlyType：A-入境航班 / D-出境航班
-    @SerializedName("FlyType")
-    val FlyType: String,
 
-    // Remark：航班狀態描述 - 已到ARRIVED
-    @SerializedName("Remark")
-    val Remark: String,
+    // 預定起飛或抵達時間 - "09:00"
+    @SerializedName("expectTime")
+    val expectTime: String,
 
-    // EstimatedTime：預估時間 - 00:02
-    @SerializedName("EstimatedTime")
-    val EstimatedTime: String,
+    // 實際起飛或抵達時間 - 例如 "08:49"
+    @SerializedName("realTime")
+    val realTime: String,
 
-    // ActualTime：實際時間 - 00:02
-    @SerializedName("ActualTime")
-    val ActualTime: String,
+    // 航空公司名稱 - "立榮航空"
+    @SerializedName("airLineName")
+    val airLineName: String,
 
-    // DepartureAirportID：起點機場IATA國際代碼 - MNL
-    @SerializedName("DepartureAirportID")
-    val DepartureAirportID: String,
+    // 航空公司代碼 - "UIA"
+    @SerializedName("airLineCode")
+    val airLineCode: String,
 
-    // DepartureAirport：起點機場 - 馬尼拉機場
-    @SerializedName("DepartureAirport")
-    val DepartureAirport: String,
+    // 航空公司 Logo 圖片網址
+    @SerializedName("airLineLogo")
+    val airLineLogo: String,
 
-    // ArrivalAirportID：目的地機場IATA國際代碼 - TPE
-    @SerializedName("ArrivalAirportID")
-    val ArrivalAirportID: String,
+    // 航空公司官方網址
+    @SerializedName("airLineUrl")
+    val airLineUrl: String,
 
-    // ArrivalAirport：目的地機場名稱 - 臺北桃園國際機場
-    @SerializedName("ArrivalAirport")
-    val ArrivalAirport: String,
+    // 航班號碼 - "B78690"
+    @SerializedName("airLineNum")
+    val airLineNum: String,
 
-    // AirlineID：航空公司IATA國際代碼 - JX
-    @SerializedName("AirlineID")
-    val AirlineID: String,
+    // 起飛機場代碼 - "MZG"
+    @SerializedName("upAirportCode")
+    val upAirportCode: String,
 
-    // Airline：航空公司名稱 - 星宇航空
-    @SerializedName("Airline")
-    val Airline: String,
+    // 起飛機場名稱 - "澎湖"
+    @SerializedName("upAirportName")
+    val upAirportName: String,
 
-    // FlightNumber：航機班號 - 786
-    @SerializedName("FlightNumber")
-    val FlightNumber: String,
+    // 飛機型號 - "AT76"
+    @SerializedName("airPlaneType")
+    val airPlaneType: String,
 
-    // Terminal：航廈 - 1
-    @SerializedName("Terminal")
-    val Terminal: String,
+    // 登機門號 - "17"
+    @SerializedName("airBoardingGate")
+    val airBoardingGate: String,
 
-    // Gate：登機門 - A9
-    @SerializedName("Gate")
-    val Gate: String,
+    // 飛行狀態 - "抵達Arrived"【抵達班機】 --- "延遲Delayed"、"準時On Time"、"取消Cancelled"【起飛班機】
+    @SerializedName("airFlyStatus")
+    val airFlyStatus: String,
 
-    // ScheduleTime: 表訂出發/到達時間 - 00:10
-    @SerializedName("ScheduleTime")
-    val ScheduleTime: String,
-
-    // UpdateTime: 資料更新時間 - 2023-05-23 11:00:28
-    @SerializedName("UpdateTime")
-    val UpdateTime: String
-
+    // 延誤原因 - "颱風天"、"暴雨"
+    @SerializedName("airFlyDelayCause")
+    val airFlyDelayCause: String? = null
 )

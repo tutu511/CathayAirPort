@@ -13,7 +13,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 // 保留 Fragment 架構 + xml 來畫 UI
 class FlightFragment : BaseFragment<FragmentFlightBinding, FlightViewModel>() {
 
-    private val _airPortID = MutableLiveData<String>("TPE")
+    // 默認是查詢全部的航班【xxx飛往桃園機場】
+    private val _airPortID = MutableLiveData<String>("")
     val airPortID: LiveData<String>
         get() = _airPortID
 

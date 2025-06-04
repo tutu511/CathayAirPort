@@ -32,8 +32,8 @@ class DepartureViewModel(application: Application) : BaseViewModel(application) 
     // 每次加载的条数
     private val limit = 10
 
-    fun loadFlightInfo(flyType: String, airPortID: String) {
-        val disposable = Repository.getFlightInfo(flyType, airPortID)
+    fun loadFlightInfo(airPortID: String, airFlyLine: Int, airFlyIO: Int) {
+        val disposable = Repository.getFlightInfo(airFlyLine, airFlyIO)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

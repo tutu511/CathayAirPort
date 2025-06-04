@@ -26,7 +26,7 @@
             android:paddingTop="3dp"
             android:paddingRight="6dp"
             android:paddingBottom="3dp"
-            android:text="@{flightInfo.remark}"
+            android:text="@{flightInfo.airFlyStatus}"
             android:textColor="@color/item_flight_info_remark_text"
             android:textSize="12sp" />
 
@@ -41,13 +41,13 @@
                 android:id="@+id/tv_departure_airport"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/layout_time"
+                android:layout_toStartOf="@+id/layout_time"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text='@{flightInfo.departureAirportID + " \n " + flightInfo.departureAirport}'
+                android:text='@{flightInfo.upAirportCode + " \n " + flightInfo.upAirportName}'
                 android:textColor="@color/icon_mode_opposite_color"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -66,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text='@{"預估時間:  " + flightInfo.estimatedTime}'
+                    android:text='@{"預估時間:  " + flightInfo.expectTime}'
                     android:textColor="@color/nav_bar_text_normal_color"
                     android:textSize="12sp" />
 
@@ -79,7 +79,7 @@
                     android:id="@+id/tv_actual_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text='@{"實際時間:  " + flightInfo.actualTime}'
+                    android:text='@{"實際時間:  " + flightInfo.realTime}'
                     android:padding="5dp"
                     android:textColor="@color/nav_bar_text_normal_color"
                     android:textSize="12sp" />
@@ -90,13 +90,13 @@
                 android:id="@+id/tv_arrival_airport"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/layout_time"
+                android:layout_toEndOf="@+id/layout_time"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text='@{flightInfo.arrivalAirportID + " \n " + flightInfo.arrivalAirport}'
+                android:text="TPE \n 臺北桃園國際機場"
                 android:textColor="@color/icon_mode_opposite_color"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -108,9 +108,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_middle"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginTop="10dp"
-            android:text='@{"航機班號:  " + flightInfo.flightNumber}'
+            android:text='@{"航機班號:  " + flightInfo.airLineNum}'
             android:textColor="@color/icon_mode_opposite_color"
             android:textSize="12sp" />
 
@@ -119,9 +119,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_flight_number"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginTop="5dp"
-            android:text='@{"航廈/登機門:  " + flightInfo.terminal + "/" + flightInfo.gate}'
+            android:text='@{"飛機型號/登機門:  " + flightInfo.airPlaneType + "/" + flightInfo.airBoardingGate}'
             android:textColor="@color/icon_mode_opposite_color"
             android:textSize="12sp" />
 
@@ -130,7 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_middle"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="10dp"
             android:text="航空公司名稱/IATA"
             android:textColor="@color/icon_mode_opposite_color"
@@ -141,9 +141,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_airline_title"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="5dp"
-            android:text='@{flightInfo.airline + "/" + flightInfo.airlineID}'
+            android:text='@{flightInfo.airLineName + "/" + flightInfo.airLineCode}'
             android:textColor="@color/icon_mode_opposite_color"
             android:textSize="12sp" />
 

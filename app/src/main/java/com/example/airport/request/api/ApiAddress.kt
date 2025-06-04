@@ -1,8 +1,8 @@
 package com.example.airport.request.api
 
 object ApiAddress {
-    const val BASE_URL = "https://e-traffic.taichung.gov.tw/DataAPI/"
-    const val CURRENCY_RATE = "https://api.freecurrencyapi.com/v1/latest"
+    // https://www.kia.gov.tw/API/InstantSchedule.ashx?AirFlyLine=2&AirFlyIO=2
+    const val FLIGHT_INFO = "API/InstantSchedule.ashx"
 
-    const val FLIGHT_INFO = "api/AirPortFlyAPI/"
+    const val RATE_INFO = "v1/latest"
 }

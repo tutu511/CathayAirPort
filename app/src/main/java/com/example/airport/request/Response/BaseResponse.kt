@@ -1,4 +1,4 @@
-package com.example.airport.request
+package com.example.airport.request.Response
 
 import java.io.Serializable
 

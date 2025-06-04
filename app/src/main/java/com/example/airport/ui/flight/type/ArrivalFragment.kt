@@ -25,8 +25,7 @@ class ArrivalFragment : BaseFragment<FragmentArrivalBinding, ArrivalViewModel>()
     // 列表多類型適配器
     private val adapter = MultiTypeAdapter()
     private val arrivalList = ArrayList<Any>()
-    private val type = "A"
-    private var airPortID = "TPE"
+    private var airPortID = ""
 
 
     override fun getLayoutId() = R.layout.fragment_arrival
@@ -116,7 +115,9 @@ class ArrivalFragment : BaseFragment<FragmentArrivalBinding, ArrivalViewModel>()
     }
 
     private fun getAirPortFlyAPI() {
-        viewModel.loadFlightInfo(type, airPortID)
+        // 固定：airFlyLine = 2, airFlyIO = 2；
+        // 查詢的機場：airPortID
+        viewModel.loadFlightInfo(airPortID,2, 2)
     }
 
     // 加載更多數據

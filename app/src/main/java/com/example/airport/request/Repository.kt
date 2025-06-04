@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.airport.data.FlightInfo
 import com.example.airport.request.NetworkModule.airPortApiService
 import com.example.airport.request.NetworkModule.exchangeRateApiService
+import com.example.airport.request.Response.BaseResponse
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -13,10 +14,11 @@ object Repository {
     /**
      * 获取机场飞行数据
      */
-    fun getFlightInfo(flyType: String, airPortID: String): Single<List<FlightInfo>> {
-        return airPortApiService.getFlightInfo(flyType, airPortID)
+    fun getFlightInfo(airFlyLine: Int, airFlyIO: Int): Single<List<FlightInfo>> {
+        return airPortApiService.getFlightInfo(airFlyLine, airFlyIO)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .map { response -> response.instantSchedule }
             .doOnError { e -> handleError(e) }
     }
 
