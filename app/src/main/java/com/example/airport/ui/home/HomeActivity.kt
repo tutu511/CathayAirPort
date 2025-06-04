@@ -1,12 +1,14 @@
 package com.example.airport.ui.home
 
-import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.example.airport.R
 import com.example.airport.BR
 import com.example.airport.base.BaseActivity
 import com.example.airport.databinding.ActivityHomeBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigationrail.NavigationRailView
 
 
 class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
@@ -21,11 +23,23 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
     override fun initView() {
         val navFragment =
             supportFragmentManager.findFragmentById(R.id.nav_fragment) as NavHostFragment
-        val navController: NavController = navFragment.navController
-        binding.homeBar.setupWithNavController(navController)
+        val navController = navFragment.navController
 
-        // 取消 icon 自带的切换颜色
-        binding.homeBar.itemIconTintList = null
+        when (val navView = binding.homeBar) {
+            is BottomNavigationView -> {
+                // 在底部
+                navView.setupWithNavController(navController)
+                navView.itemIconTintList = null
+            }
+            is NavigationRailView -> {
+                // 在左側
+                NavigationUI.setupWithNavController(
+                    navView,
+                    navController
+                )
+                navView.itemIconTintList = null
+            }
+        }
     }
 
 }

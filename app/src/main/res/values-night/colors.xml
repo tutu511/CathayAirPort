@@ -5,7 +5,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
-    <color name="icon_fill_color">#6B400D</color>
+    <color name="icon_fill_color">#A85E06</color>
     <color name="icon_stroke_color">#F6C840</color>
     <color name="icon_mode_color">#000000</color>
     <color name="icon_mode_opposite_color">#FFFFFF</color>
@@ -35,7 +35,9 @@
     <color name="checkbox_status_unchecked">#FF9800</color>
     <color name="checkbox_status_checkmark">#FFFFFF</color>
 
-    <color name="bottom_navigation_bg">#C7474545</color>
-    <color name="bottom_navigation_stroke_color">#8FFFFFFF</color>
+    <color name="bottom_navigation_bg">#474545</color>
+    <color name="bottom_navigation_stroke_color">#595858</color>
+
+    <color name="card_bg">#6B400D</color>
 
 </resources>

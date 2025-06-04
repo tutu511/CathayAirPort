@@ -38,4 +38,6 @@
     <color name="bottom_navigation_bg">#FFFFFF</color>
     <color name="bottom_navigation_stroke_color">#05000000</color>
 
+    <color name="card_bg">#FAE0C7</color>
+
 </resources>

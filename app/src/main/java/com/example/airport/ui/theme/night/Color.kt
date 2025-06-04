@@ -14,5 +14,5 @@ val OnBackground = Color(0xFFFFFFFF)
 val Surface = Color(0xFF000000)
 // 文字顏色
 val OnSurface = Color(0xFFFFFFFF)
-val Error = Color(0xFFAB2B2B)
-val OnError = Color(0xFFAB2B2B)
+val Error = Color(0xFFEF2222)
+val OnError = Color(0xFFEF2222)

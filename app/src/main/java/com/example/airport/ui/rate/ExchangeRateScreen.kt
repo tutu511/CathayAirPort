@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -53,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.airport.R
 import com.example.airport.data.LoadMore
+import java.math.BigDecimal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +66,7 @@ fun ExchangeRateScreen(viewModel: RateViewModel) {
      * 將其轉換為 Compose 的 State<Double>，以便於在 UI 中即時響應
      * 如果 LiveData 尚未有值（例如畫面剛啟動），就使用預設值 1.0
      */
-    val baseAmount by viewModel.baseAmount.observeAsState(1.0)
+    val baseAmount by viewModel.baseAmount.observeAsState(BigDecimal("1.0"))
     // 當 API 資料成功載入並更新 rateList 時，UI 會自動更新顯示新的匯率清單
     val rateMap by viewModel.rateList.observeAsState(emptyMap())
     // 主幣別
@@ -108,12 +110,14 @@ fun ExchangeRateScreen(viewModel: RateViewModel) {
 
         // 使用者輸入欲換算的金額
         OutlinedTextField(
-            value = baseAmount.toString(),
+            value = baseAmount.stripTrailingZeros().toPlainString(),
             onValueChange = { newText ->
-                // 默認值 1.0
-                val value = newText.toDoubleOrNull() ?: 1.0
-                // 更新 ViewModel 裡的輸入金額
-                viewModel.setBaseAmount(value)
+                try {
+                    // 更新 ViewModel 裡的輸入金額
+                    viewModel.setBaseAmount(BigDecimal(newText))
+                } catch (e: NumberFormatException) {
+                    // 不是數字，不更新 ViewModel 的金額，但是輸入框文字要保留
+                }
             },
             label = {
                 Row(
@@ -248,7 +252,14 @@ fun ExchangeRateScreen(viewModel: RateViewModel) {
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp, top = 10.dp)
+                .padding(bottom = 16.dp, top = 10.dp),
+            maxLines = 1,
+            shape = MaterialTheme.shapes.small.copy(
+                topStart = CornerSize(15f.dp),
+                topEnd = CornerSize(15f.dp),
+                bottomEnd = CornerSize(15f.dp),
+                bottomStart = CornerSize(15f.dp)
+            )
         )
 
         Row(
@@ -410,14 +421,14 @@ fun ExchangeRateScreen(viewModel: RateViewModel) {
                         ) {
                             viewModel.fetchAllRates()
                         },
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_rate_error),
                         contentDescription = "無數據",
                         modifier = Modifier
-                            .size(150.dp)
-                            .padding(end = 8.dp)
+                            .size(140.dp)
                     )
                     Text(
                         text = loadMoreState.message!!,
@@ -425,6 +436,25 @@ fun ExchangeRateScreen(viewModel: RateViewModel) {
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(8.dp)
                     )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_rate_reload),
+                            contentDescription = "幣別選擇",
+                            modifier = Modifier
+                                .size(26.dp)
+                        )
+                        Text(
+                            text = stringResource(R.string.tv_rate_reload),
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(5.dp)
+                        )
+                    }
                 }
             }
         } else {

@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.math.BigDecimal
 
 class RateViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -21,8 +22,8 @@ class RateViewModel(application: Application) : AndroidViewModel(application) {
     val rateList: LiveData<Map<String, Double>> = _rateList
 
     // 使用者輸入的金額，預設為 1
-    private val _baseAmount = MutableLiveData(1.0)
-    val baseAmount: LiveData<Double> = _baseAmount
+    private val _baseAmount = MutableLiveData(BigDecimal("1.0"))
+    val baseAmount: LiveData<BigDecimal> = _baseAmount
 
     // 計算匯率的主幣別
     private val _baseCurrency = MutableLiveData("USD")
@@ -43,7 +44,7 @@ class RateViewModel(application: Application) : AndroidViewModel(application) {
 
 
     // 設定輸入金額
-    fun setBaseAmount(amount: Double) {
+    fun setBaseAmount(amount: BigDecimal) {
         _baseAmount.value = amount
     }
 
@@ -71,7 +72,7 @@ class RateViewModel(application: Application) : AndroidViewModel(application) {
                 apiKey = BuildConfig.API_KEY,
                 baseCurrency = baseCurrency.value,
                 currencies = allCurrencies)
-            .timeout(10, java.util.concurrent.TimeUnit.SECONDS)
+            .timeout(6, java.util.concurrent.TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ response ->

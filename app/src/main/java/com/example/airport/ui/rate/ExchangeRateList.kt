@@ -11,9 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import java.math.BigDecimal
 
 @Composable
-fun ExchangeRateList(baseAmount: Double, rates: Map<String, Double>, selectedCurrencies: List<String>) {
+fun ExchangeRateList(baseAmount: BigDecimal, rates: Map<String, Double>, selectedCurrencies: List<String>) {
 
     // 過濾選中的幣別匯率
     val filteredRates = selectedCurrencies.mapNotNull { currency ->
@@ -47,7 +48,7 @@ fun ExchangeRateList(baseAmount: Double, rates: Map<String, Double>, selectedCur
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = String.format("%.5f", baseAmount * rate),
+                    text = String.format("%.5f", baseAmount.multiply(BigDecimal.valueOf(rate))),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
