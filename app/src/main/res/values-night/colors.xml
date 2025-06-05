@@ -23,7 +23,10 @@
     <color name="tab_text_select_color">#F6C840</color>
     <color name="tab_indicator_color">#F6C840</color>
 
-    <color name="item_flight_info_remark_bg">#47A0E3</color>
+    <color name="item_flight_info_arrived_remark_bg">#47A0E3</color>
+    <color name="item_flight_info_onTime_remark_bg">#5ABD1C</color>
+    <color name="item_flight_info_cancel_remark_bg">#D06315</color>
+    <color name="item_flight_info_delay_remark_bg">#E4316A</color>
     <color name="item_flight_info_remark_text">#06528E</color>
     <color name="item_flight_info_bg">#5A5A59</color>
 

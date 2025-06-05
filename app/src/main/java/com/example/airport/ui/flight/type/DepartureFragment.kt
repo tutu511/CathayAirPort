@@ -1,7 +1,8 @@
 package com.example.airport.ui.flight.type
 
-import android.widget.Toast
+import android.util.Log
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.drakeet.multitype.MultiTypeAdapter
@@ -10,7 +11,7 @@ import com.example.airport.R
 import com.example.airport.base.BaseFragment
 import com.example.airport.data.LoadMore
 import com.example.airport.databinding.FragmentDepartureBinding
-import com.example.airport.ui.flight.FlightFragment
+import com.example.airport.ui.flight.FlightViewModel
 import com.example.airport.ui.flight.type.binder.FlightInfoItemViewBinder
 import com.example.airport.ui.flight.type.binder.LoadMoreItemViewBinder
 
@@ -18,29 +19,24 @@ class DepartureFragment : BaseFragment<FragmentDepartureBinding, DepartureViewMo
 
     // 列表多類型適配器
     private val adapter = MultiTypeAdapter()
-    private val arrivalList = ArrayList<Any>()
-    private var airPortID = ""
+    private val departureList = ArrayList<Any>()
+
+    private var flightViewModel: FlightViewModel? = null
 
     override fun getLayoutId() = R.layout.fragment_departure
 
     override fun getViewModelId() = BR.departureVm
 
     override fun initView() {
-        // 觀察 FlightFragment 的 airPortID 變化
-        val parentFragment = parentFragment
-        if (parentFragment is FlightFragment) {
-            parentFragment.airPortID.observe(viewLifecycleOwner, Observer { newAirPortID ->
-                airPortID = newAirPortID
-                arrivalList.clear()
-                viewModel.clearFlightInfo()
-                getAirPortFlyAPI()
-            })
+        // 獲取 FlightFragment 的 flightViewModel
+        flightViewModel = parentFragment?.let {
+            ViewModelProvider(it)[FlightViewModel::class.java]
         }
 
         // 註冊不同的類型
         adapter.register(FlightInfoItemViewBinder())
         adapter.register(LoadMoreItemViewBinder())
-        adapter.items = arrivalList
+        adapter.items = departureList
         binding.rvDeparture.layoutManager = LinearLayoutManager(context)
         binding.rvDeparture.adapter = adapter
         binding.rvDeparture.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -51,87 +47,54 @@ class DepartureFragment : BaseFragment<FragmentDepartureBinding, DepartureViewMo
                 val totalItemCount = layoutManager.itemCount
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 
-                if (viewModel.isLoading.value == false && totalItemCount <= (lastVisibleItem + 1)) {
-                    viewModel.setLoading(true)
+                if (flightViewModel?.departureIsLoading?.value == false && totalItemCount <= (lastVisibleItem + 1)) {
+                    flightViewModel?.setDepartureLoading(true)
                     loadMoreData()
                 }
-
             }
         })
 
-        // 设置下拉刷新监听
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            if (viewModel.isLoading.value == true) {
-                Toast.makeText(context, "正在加載數據，等數據加載完再進行刷新", Toast.LENGTH_SHORT).show()
-                binding.swipeRefreshLayout.isRefreshing = false
-            } else {
-                refreshData()
+
+        // 觀察 FlightFragment 的 flightViewModel departureData 變化
+        flightViewModel?.departureState?.observe(viewLifecycleOwner, Observer { data ->
+            Log.d("tutu","departureData observe = " + data)
+            departureList.clear()
+            if (data.list.isNotEmpty()) {
+                departureList.addAll(data.list)
+            }
+            if (data.isEnd) {
+                departureList.add(LoadMore(false, "已經滑到最底了 >_<"))
+            }
+            Log.d("tutu", "departureList= $departureList")
+            Log.d("tutu", "departureList= ${departureList.size}")
+
+            adapter.notifyDataSetChanged()
+        })
+
+        // 加載完畢後要刪掉剛剛添加的 “正在加载中，请稍等” 數據
+        flightViewModel?.departureIsLoading?.observe(viewLifecycleOwner) { isLoading ->
+            // 控制是否顯示 loading item
+            if (!isLoading) {
+                removeLoadingItem()
             }
         }
 
-        // 觀察 flightInfoList 的變化，需要更新列表
-        viewModel.flightInfoList.observe(viewLifecycleOwner, Observer { newItems ->
-            if (newItems.isNotEmpty()) {
-                val loadMoreIndex = arrivalList.indexOfFirst { it is LoadMore }
-                if (loadMoreIndex != -1) {
-                    arrivalList.removeAll { it is LoadMore }
-                    adapter.notifyItemRemoved(loadMoreIndex)
-                }
-                binding.swipeRefreshLayout.isRefreshing = false
-                arrivalList.addAll(newItems.subList(arrivalList.size, newItems.size))
-                adapter.notifyDataSetChanged()
-            }
-
-        })
-
-        // 觀察 isLoading 的值 -- 數據是否還在加載
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
-            // 如果已經滑到最底了，就不会更新数据了，这时候就要自己观察 isLoading 数据，进行删除
-            if (!isLoading) {
-                val loadMoreIndex = arrivalList.indexOfFirst { it is LoadMore }
-                if (loadMoreIndex != -1) {
-                    arrivalList.removeAt(loadMoreIndex)
-                    adapter.notifyItemRemoved(loadMoreIndex)
-                }
-            }
-        })
-
-        // 觀察 isEnd 的值 -- 數據是否已經到底了
-        viewModel.isEnd.observe(viewLifecycleOwner, Observer { isEnd ->
-            if (isEnd) {
-                addEndOfListMessage()
-            }
-        })
-
-        // 第一次获取数据  - 测试代码
-        getAirPortFlyAPI()
-    }
-
-    private fun getAirPortFlyAPI() {
-        //  固定：airFlyLine = 2, airFlyIO = 2；
-        //  查詢的機場：airPortID
-        viewModel.loadFlightInfo(airPortID, 2, 2)
     }
 
     // 加載更多數據
     private fun loadMoreData() {
-        arrivalList.add(LoadMore(true, "正在加载中，请稍等"))
-        adapter.notifyItemInserted(arrivalList.size - 1)
-        getAirPortFlyAPI()
+        departureList.add(LoadMore(true, "正在加载中，请稍等"))
+        adapter.notifyItemInserted(departureList.size - 1)
+        flightViewModel?.loadDepartureFlights(2, 2)
     }
 
-    // 停止加載，假設已經滑到底了
-    private fun addEndOfListMessage() {
-        arrivalList.add(LoadMore(false, "已經滑到最底了 >_<"))
-        adapter.notifyItemInserted(arrivalList.size - 1)
-    }
-
-    private fun refreshData() {
-        // 刷新数据，重新获取最新的数据
-        binding.swipeRefreshLayout.isRefreshing = true
-        arrivalList.clear()
-        viewModel.clearFlightInfo()
-        getAirPortFlyAPI()
+    // 刪除 “加載中” 的提示
+    private fun removeLoadingItem() {
+        val index = departureList.indexOfFirst { it is LoadMore && it.isLoading }
+        if (index != -1) {
+            departureList.removeAt(index)
+            adapter.notifyItemRemoved(index)
+        }
     }
 
 }

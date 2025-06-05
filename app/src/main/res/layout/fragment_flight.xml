@@ -56,11 +56,20 @@
             app:tabSelectedTextColor="@color/tab_text_select_color"
             app:tabTextColor="@color/tab_text_normal_color" />
 
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/flight_vp"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/flight_vp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
 
     </LinearLayout>
 </layout>

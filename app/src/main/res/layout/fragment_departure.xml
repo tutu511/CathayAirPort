@@ -15,31 +15,10 @@
         android:layout_height="match_parent"
         tools:context=".ui.flight.type.DepartureFragment">
 
-<!--        <TextView-->
-<!--            android:id="@+id/tv_hint"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_margin="30dp"-->
-<!--            android:gravity="center"-->
-<!--            android:text="@string/tv_flight_hint"-->
-<!--            android:textColor="@color/icon_mode_opposite_color"-->
-<!--            android:textSize="24sp"-->
-<!--            android:visibility='@{!departureVm.isSearching ? View.VISIBLE : View.GONE}' />-->
-
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility='@{departureVm.isSearching ? View.VISIBLE : View.GONE}'>
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_departure"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </FrameLayout>
 </layout>
