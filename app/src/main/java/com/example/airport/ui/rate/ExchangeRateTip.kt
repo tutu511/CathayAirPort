@@ -31,7 +31,7 @@ fun ExchangeRateTip() {
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(top = 10.dp),
+            .padding(top = 10.dp, bottom = 20.dp),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
