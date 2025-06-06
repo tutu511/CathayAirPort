@@ -1,6 +1,5 @@
 package com.example.airport.ui.flight.type
 
-import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,6 +8,7 @@ import com.drakeet.multitype.MultiTypeAdapter
 import com.example.airport.BR
 import com.example.airport.R
 import com.example.airport.base.BaseFragment
+import com.example.airport.data.FlightInfo
 import com.example.airport.data.LoadMore
 import com.example.airport.databinding.FragmentDepartureBinding
 import com.example.airport.ui.flight.FlightViewModel
@@ -34,8 +34,8 @@ class DepartureFragment : BaseFragment<FragmentDepartureBinding, DepartureViewMo
         }
 
         // 註冊不同的類型
-        adapter.register(FlightInfoItemViewBinder())
-        adapter.register(LoadMoreItemViewBinder())
+        adapter.register(FlightInfo::class.java, FlightInfoItemViewBinder())
+        adapter.register(LoadMore::class.java, LoadMoreItemViewBinder())
         adapter.items = departureList
         binding.rvDeparture.layoutManager = LinearLayoutManager(context)
         binding.rvDeparture.adapter = adapter
@@ -49,26 +49,48 @@ class DepartureFragment : BaseFragment<FragmentDepartureBinding, DepartureViewMo
 
                 if (flightViewModel?.departureIsLoading?.value == false && totalItemCount <= (lastVisibleItem + 1)) {
                     flightViewModel?.setDepartureLoading(true)
+                    removeEndItem()
                     loadMoreData()
                 }
             }
         })
+        binding.rvDeparture.requestFocus()
 
 
         // 觀察 FlightFragment 的 flightViewModel departureData 變化
         flightViewModel?.departureState?.observe(viewLifecycleOwner, Observer { data ->
-            Log.d("tutu","departureData observe = " + data)
-            departureList.clear()
-            if (data.list.isNotEmpty()) {
-                departureList.addAll(data.list)
+            // 是否是全部刷新
+            if (data.isRefresh) {
+                departureList.clear()
+                if (data.isSuccess) {
+                    if (data.list.isNotEmpty()) {
+                        departureList.addAll(data.list)
+                    }
+                    if (data.isEnd) {
+                        departureList.add(LoadMore(false, getString(R.string.tv_flight_end)))
+                    }
+                } else {
+                    departureList.add(LoadMore(false, getString(R.string.tv_flight_error)))
+                }
+                adapter.notifyDataSetChanged()
+                binding.rvDeparture.scrollToPosition(0)
+            } else {
+                // 加載更多
+                removeEndItem()
+                if (data.isSuccess) {
+                    val startIndex = departureList.size
+                    if (data.list.isNotEmpty()) {
+                        departureList.addAll(data.list)
+                    }
+                    if (data.isEnd) {
+                        departureList.add(LoadMore(false, getString(R.string.tv_flight_end)))
+                    }
+                    adapter.notifyItemRangeChanged(startIndex, departureList.size - startIndex)
+                } else {
+                    departureList.add(LoadMore(false, getString(R.string.tv_flight_error)))
+                    adapter.notifyItemInserted(departureList.size - 1)
+                }
             }
-            if (data.isEnd) {
-                departureList.add(LoadMore(false, "已經滑到最底了 >_<"))
-            }
-            Log.d("tutu", "departureList= $departureList")
-            Log.d("tutu", "departureList= ${departureList.size}")
-
-            adapter.notifyDataSetChanged()
         })
 
         // 加載完畢後要刪掉剛剛添加的 “正在加载中，请稍等” 數據
@@ -83,9 +105,9 @@ class DepartureFragment : BaseFragment<FragmentDepartureBinding, DepartureViewMo
 
     // 加載更多數據
     private fun loadMoreData() {
-        departureList.add(LoadMore(true, "正在加载中，请稍等"))
+        departureList.add(LoadMore(true, getString(R.string.tv_flight_loading)))
         adapter.notifyItemInserted(departureList.size - 1)
-        flightViewModel?.loadDepartureFlights(2, 2)
+        flightViewModel?.loadDepartureFlights(2, 2, false)
     }
 
     // 刪除 “加載中” 的提示
@@ -95,6 +117,20 @@ class DepartureFragment : BaseFragment<FragmentDepartureBinding, DepartureViewMo
             departureList.removeAt(index)
             adapter.notifyItemRemoved(index)
         }
+    }
+
+    // 刪除 “已經到底” 的提示
+    private fun removeEndItem() {
+        val index = departureList.indexOfFirst { it is LoadMore && !it.isLoading }
+        if (index != -1) {
+            departureList.removeAt(index)
+            adapter.notifyItemRemoved(index)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.rvDeparture.requestFocus()
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.airport.ui.flight.type
 
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,6 +49,7 @@ class ArrivalFragment : BaseFragment<FragmentArrivalBinding, ArrivalViewModel>()
 
                 if (flightViewModel?.arrivalIsLoading?.value == false && totalItemCount <= (lastVisibleItem + 1)) {
                     flightViewModel?.setArrivalLoading(true)
+                    removeEndItem()
                     loadMoreData()
                 }
 
@@ -56,14 +58,39 @@ class ArrivalFragment : BaseFragment<FragmentArrivalBinding, ArrivalViewModel>()
 
         // 觀察 FlightFragment 的 flightViewModel arrivalData 變化
         flightViewModel?.arrivalState?.observe(viewLifecycleOwner, Observer { data ->
-            arrivalList.clear()
-            if (data.list.isNotEmpty()) {
-                arrivalList.addAll(data.list)
+            // 是否是全部刷新
+            if (data.isRefresh) {
+                arrivalList.clear()
+                if (data.isSuccess) {
+                    if (data.list.isNotEmpty()) {
+                        arrivalList.addAll(data.list)
+                    }
+                    if (data.isEnd) {
+                        arrivalList.add(LoadMore(false, getString(R.string.tv_flight_end)))
+                    }
+                } else {
+                    arrivalList.add(LoadMore(false, getString(R.string.tv_flight_error)))
+                }
+                adapter.notifyDataSetChanged()
+                binding.rvArrival.scrollToPosition(0)
+            } else {
+                // 加載更多
+                removeEndItem()
+
+                if (data.isSuccess) {
+                    val startIndex = arrivalList.size
+                    if (data.list.isNotEmpty()) {
+                        arrivalList.addAll(data.list)
+                    }
+                    if (data.isEnd) {
+                        arrivalList.add(LoadMore(false, getString(R.string.tv_flight_end)))
+                    }
+                    adapter.notifyItemRangeChanged(startIndex, arrivalList.size - startIndex)
+                } else {
+                    arrivalList.add(LoadMore(false, getString(R.string.tv_flight_error)))
+                    adapter.notifyItemInserted(arrivalList.size - 1)
+                }
             }
-            if (data.isEnd) {
-                arrivalList.add(LoadMore(false, "已經滑到最底了 >_<"))
-            }
-            adapter.notifyDataSetChanged()
         })
 
         // 加載完畢後要刪掉剛剛添加的 “正在加载中，请稍等” 數據
@@ -77,9 +104,9 @@ class ArrivalFragment : BaseFragment<FragmentArrivalBinding, ArrivalViewModel>()
 
     // 加載更多數據
     private fun loadMoreData() {
-        arrivalList.add(LoadMore(true, "正在加载中，请稍等"))
+        arrivalList.add(LoadMore(true, getString(R.string.tv_flight_loading)))
         adapter.notifyItemInserted(arrivalList.size - 1)
-        flightViewModel?.loadArrivalFlights(2, 2)
+        flightViewModel?.loadArrivalFlights(2, 2, false)
     }
 
     // 刪除 “加載中” 的提示
@@ -89,6 +116,20 @@ class ArrivalFragment : BaseFragment<FragmentArrivalBinding, ArrivalViewModel>()
             arrivalList.removeAt(index)
             adapter.notifyItemRemoved(index)
         }
+    }
+
+    // 刪除 “已經到底” 的提示
+    private fun removeEndItem() {
+        val index = arrivalList.indexOfFirst { it is LoadMore && !it.isLoading }
+        if (index != -1) {
+            arrivalList.removeAt(index)
+            adapter.notifyItemRemoved(index)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.rvArrival.requestFocus()
     }
 
 }
